@@ -23,6 +23,7 @@ import { RolesGuard } from '../../guards/roles.guard';
 import { Roles } from '../../decorators/roles.decorator';
 import { multerConfig } from '../../middleware/upload.config';
 import type { Express } from 'express';
+import { UserRole } from '../../enums';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('patients')
@@ -30,7 +31,7 @@ export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
   @Post()
-  @Roles('DOCTOR', 'RECEPTIONIST', 'ASSISTANT')
+  @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST, UserRole.ASSISTANT)
   @UseInterceptors(
     FileFieldsInterceptor(
       [
@@ -64,19 +65,19 @@ export class PatientController {
   }
 
   @Get()
-  @Roles('DOCTOR', 'RECEPTIONIST', 'ASSISTANT')
+  @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST, UserRole.ASSISTANT)
   async findAll() {
     return this.patientService.findAll();
   }
 
   @Get(':id')
-  @Roles('DOCTOR', 'RECEPTIONIST', 'ASSISTANT')
+  @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST, UserRole.ASSISTANT)
   async findOne(@Param('id') id: string) {
     return this.patientService.findById(id);
   }
 
   @Put(':id')
-  @Roles('DOCTOR', 'RECEPTIONIST')
+  @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST)
   @UseInterceptors(
     FileFieldsInterceptor(
       [
@@ -118,7 +119,7 @@ export class PatientController {
   }
 
   @Post(':id/photo')
-  @Roles('DOCTOR', 'RECEPTIONIST')
+  @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST)
   @UseInterceptors(FileInterceptor('photo', multerConfig))
   async uploadPhoto(
     @Param('id') id: string,
@@ -136,7 +137,7 @@ export class PatientController {
   }
 
   @Post(':id/documents')
-  @Roles('DOCTOR', 'RECEPTIONIST')
+  @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST)
   @UseInterceptors(FileInterceptor('documents', multerConfig))
   async uploadDocument(
     @Param('id') id: string,
@@ -157,7 +158,7 @@ export class PatientController {
   }
 
   @Delete(':id')
-  @Roles('DOCTOR')
+  @Roles(UserRole.DOCTOR)
   async remove(@Param('id') id: string) {
     return this.patientService.removePatient(id);
   }

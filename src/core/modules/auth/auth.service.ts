@@ -10,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User, UserDocument } from '../../models/user.model';
 import { MailService } from '../../utils/mail.service';
+import { UserRole } from '../../enums';
 
 @Injectable()
 export class AuthService {
@@ -23,11 +24,11 @@ export class AuthService {
     name: string;
     email: string;
     password: string;
-    role: string;
+    role: UserRole;
     specialization?: string;
     photo?: string;
   }) {
-    if (dto.role === 'DOCTOR' && !dto.specialization) {
+    if (dto.role === UserRole.DOCTOR && !dto.specialization) {
       throw new BadRequestException('التخصص مطلوب للطبيب');
     }
 
@@ -196,7 +197,7 @@ export class AuthService {
 
   async getAllDoctors() {
     const doctors = await this.userModel
-      .find({ role: 'DOCTOR' })
+      .find({ role: UserRole.DOCTOR })
       .select('-passwordHash -otp -otpExpires');
     return {
       count: doctors.length,

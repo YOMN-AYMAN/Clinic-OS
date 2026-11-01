@@ -9,7 +9,11 @@ import {
   Appointment,
   AppointmentDocument,
 } from '../../models/appointment.model';
-import { CreateAppointmentDto, UpdateAppointmentDto } from './dto/appointment.dto';
+import {
+  CreateAppointmentDto,
+  UpdateAppointmentDto,
+} from './dto/appointment.dto';
+import { AppointmentStatus } from '../../enums';
 
 @Injectable()
 export class AppointmentService {
@@ -28,7 +32,7 @@ export class AppointmentService {
       doctorId: new Types.ObjectId(doctorId),
       date,
       time,
-      status: { $ne: 'CANCELLED' }, // لو الموعد مش ملغي يبقى محجوز
+      status: { $ne: AppointmentStatus.CANCELLED }, // لو الموعد مش ملغي يبقى محجوز
     });
 
     if (existingAppointment) {

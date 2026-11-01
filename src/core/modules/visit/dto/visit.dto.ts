@@ -8,6 +8,7 @@ import {
   IsObject,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { VisitStatus } from '../../../enums';
 
 export class CreateVisitDto {
   @IsNotEmpty({ message: 'معرف الموعد مطلوب' })
@@ -49,9 +50,9 @@ export class CreateVisitDto {
   };
 
   @IsOptional()
-  @IsEnum(['IN_PROGRESS', 'COMPLETED'], { message: 'حالة الكشف غير صالحة' })
+  @IsEnum(VisitStatus, { message: 'حالة الكشف غير صالحة' })
   @Transform(({ value }: { value: string }) =>
-    value ? value.trim().toUpperCase() : 'IN_PROGRESS',
+    value ? value.trim() : VisitStatus.IN_PROGRESS,
   )
   status?: string;
 }

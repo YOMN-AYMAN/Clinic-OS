@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { PartialType } from '@nestjs/mapped-types';
-
+import { AppointmentStatus, ServiceType } from '../../../enums';
 
 export class CreateAppointmentDto {
   @IsNotEmpty({ message: 'معرف المريض مطلوب' })
@@ -27,18 +27,18 @@ export class CreateAppointmentDto {
   time: string;
 
   @IsNotEmpty({ message: 'نوع الخدمة مطلوب' })
-  @IsEnum(['CONSULTATION', 'NEW_EXAM', 'FOLLOW_UP', 'RE_EXAM'], {
+  @IsEnum(ServiceType, {
     message: 'نوع الخدمة غير صالح',
   })
-  @Transform(({ value }: { value: string }) => value?.trim().toUpperCase())
+  @Transform(({ value }: { value: string }) => value?.trim())
   serviceType: string;
 
   @IsOptional()
-  @IsEnum(['PENDING', 'COMPLETED', 'CANCELLED'], {
+  @IsEnum(AppointmentStatus, {
     message: 'حالة الموعد غير صالحة',
   })
   @Transform(({ value }: { value: string }) =>
-    value ? value.trim().toUpperCase() : 'PENDING',
+    value ? value.trim() : AppointmentStatus.PENDING,
   )
   status?: string;
 

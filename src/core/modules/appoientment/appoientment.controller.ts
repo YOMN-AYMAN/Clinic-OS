@@ -16,6 +16,7 @@ import {
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { RolesGuard } from '../../guards/roles.guard';
 import { Roles } from '../../decorators/roles.decorator';
+import { UserRole } from '../../enums';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('appointments')
@@ -23,7 +24,7 @@ export class AppointmentController {
   constructor(private readonly appointmentService: AppointmentService) {}
 
   @Post()
-  @Roles('DOCTOR', 'RECEPTIONIST', 'ASSISTANT')
+  @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST, UserRole.ASSISTANT)
   async create(@Body() createDto: CreateAppointmentDto) {
     const appointment = await this.appointmentService.create(createDto);
     return {
@@ -33,19 +34,19 @@ export class AppointmentController {
   }
 
   @Get()
-  @Roles('DOCTOR', 'RECEPTIONIST', 'ASSISTANT')
+  @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST, UserRole.ASSISTANT)
   async findAll() {
     return this.appointmentService.findAll();
   }
 
   @Get(':id')
-  @Roles('DOCTOR', 'RECEPTIONIST', 'ASSISTANT')
+  @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST, UserRole.ASSISTANT)
   async findOne(@Param('id') id: string) {
     return this.appointmentService.findById(id);
   }
 
   @Put(':id')
-  @Roles('DOCTOR', 'RECEPTIONIST')
+  @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST)
   async update(
     @Param('id') id: string,
     @Body() updateDto: UpdateAppointmentDto,
@@ -58,7 +59,7 @@ export class AppointmentController {
   }
 
   @Delete(':id')
-  @Roles('DOCTOR', 'RECEPTIONIST')
+  @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST)
   async remove(@Param('id') id: string) {
     return this.appointmentService.remove(id);
   }

@@ -8,6 +8,7 @@ import {
   Max,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { Gender } from '../../../enums';
 
 export class CreatePatientDto {
   @IsNotEmpty({ message: 'اسم المريض مطلوب' })
@@ -26,7 +27,7 @@ export class CreatePatientDto {
   age: number;
 
   @IsNotEmpty({ message: 'النوع مطلوب' })
-  @IsEnum(['male', 'female'], { message: 'gender must be male or female' })
+  @IsEnum(Gender, { message: 'النوع يجب أن يكون ذكر أو أنثى' })
   gender: string;
 
   @IsOptional()
@@ -67,7 +68,7 @@ export class UpdatePatientDto {
   age?: number;
 
   @IsOptional()
-  @IsEnum(['male', 'female'], { message: 'النوع يجب أن يكون male أو female' })
+  @IsEnum(Gender, { message: 'النوع يجب أن يكون ذكر أو أنثى' })
   gender?: string;
 
   @IsOptional()

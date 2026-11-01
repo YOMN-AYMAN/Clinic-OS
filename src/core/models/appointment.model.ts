@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { AppointmentStatus, ServiceType } from '../enums';
 
 export type AppointmentDocument = Appointment & Document;
 
@@ -12,22 +13,22 @@ export class Appointment {
   doctorId: Types.ObjectId;
 
   @Prop({ required: true })
-  date: string; // صيغة التاريخ مثلاً: 'YYYY-MM-DD'
+  date: string;
 
   @Prop({ required: true })
-  time: string; // صيغة الوقت مثلاً: '10:30'
+  time: string;
 
   @Prop({
     required: true,
-    enum: ['CONSULTATION', 'NEW_EXAM', 'FOLLOW_UP', 'RE_EXAM'],
-    default: 'CONSULTATION',
+    enum: Object.values(ServiceType),
+    default: ServiceType.NEW_EXAM,
   })
   serviceType: string;
 
   @Prop({
     required: true,
-    enum: ['PENDING', 'COMPLETED', 'CANCELLED'],
-    default: 'PENDING',
+    enum: Object.values(AppointmentStatus),
+    default: AppointmentStatus.PENDING,
   })
   status: string;
 

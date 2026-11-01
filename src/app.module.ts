@@ -6,6 +6,10 @@ import { AuthModule } from './core/modules/auth/auth.module';
 import { PatientModule } from './core/modules/patient/patient.module';
 import { AppointmentModule } from './core/modules/appoientment/appoientment.module';
 import { VisitModule } from './core/modules/visit/visit.module';
+import { PrescriptionModule } from './core/modules/prescription/prescription.module';
+import { InvoiceModule } from './core/modules/invoice/invoice.module';
+import { ExpenseModule } from './core/modules/expense/expense.module';
+import { ReportsModule } from './core/modules/report/report.module';
 
 @Module({
   imports: [
@@ -14,6 +18,10 @@ import { VisitModule } from './core/modules/visit/visit.module';
     PatientModule,
     AppointmentModule,
     VisitModule,
+    PrescriptionModule,
+    InvoiceModule,
+    ExpenseModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

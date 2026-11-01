@@ -15,7 +15,9 @@ export class PatientService {
   ) {}
 
   async createPatient(createPatientDto: CreatePatientDto): Promise<Patient> {
-    const existingPatient = await this.patientModel.findOne({ phone: createPatientDto.phone });
+    const existingPatient = await this.patientModel.findOne({
+      phone: createPatientDto.phone,
+    });
     if (existingPatient) {
       throw new ConflictException('رقم الهاتف مسجل مسبقاً لمريض آخر');
     }

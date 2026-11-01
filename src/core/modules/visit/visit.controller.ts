@@ -13,6 +13,7 @@ import { CreateVisitDto, UpdateVisitDto } from './dto/visit.dto';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { RolesGuard } from '../../guards/roles.guard';
 import { Roles } from '../../decorators/roles.decorator';
+import { UserRole } from '../../enums';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('visits')
@@ -20,7 +21,7 @@ export class VisitController {
   constructor(private readonly visitService: VisitService) {}
 
   @Post()
-  @Roles('DOCTOR', 'ASSISTANT')
+  @Roles(UserRole.DOCTOR, UserRole.ASSISTANT)
   async create(@Body() createDto: CreateVisitDto) {
     const visit = await this.visitService.create(createDto);
     return {
@@ -30,19 +31,19 @@ export class VisitController {
   }
 
   @Get()
-  @Roles('DOCTOR', 'RECEPTIONIST', 'ASSISTANT')
+  @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST, UserRole.ASSISTANT)
   async findAll() {
     return this.visitService.findAll();
   }
 
   @Get(':id')
-  @Roles('DOCTOR', 'RECEPTIONIST', 'ASSISTANT')
+  @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST, UserRole.ASSISTANT)
   async findOne(@Param('id') id: string) {
     return this.visitService.findById(id);
   }
 
   @Put(':id')
-  @Roles('DOCTOR', 'ASSISTANT')
+  @Roles(UserRole.DOCTOR, UserRole.ASSISTANT)
   async update(@Param('id') id: string, @Body() updateDto: UpdateVisitDto) {
     const visit = await this.visitService.update(id, updateDto);
     return {
@@ -52,7 +53,7 @@ export class VisitController {
   }
 
   @Delete(':id')
-  @Roles('DOCTOR')
+  @Roles(UserRole.DOCTOR)
   async remove(@Param('id') id: string) {
     return this.visitService.remove(id);
   }

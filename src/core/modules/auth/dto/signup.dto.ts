@@ -7,6 +7,7 @@ import {
   IsOptional,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { UserRole } from '../../../enums';
 
 export class SignupDto {
   @IsNotEmpty({ message: 'الاسم مطلوب' })
@@ -27,13 +28,13 @@ export class SignupDto {
 
   @IsNotEmpty({ message: 'الدور الوظيفي مطلوب' })
   @Transform(({ value }: { value: unknown }) =>
-    typeof value === 'string' ? value.trim().toUpperCase() : value,
+    typeof value === 'string' ? value.trim() : value,
   )
-  @IsEnum(['DOCTOR', 'RECEPTIONIST', 'ASSISTANT'], {
+  @IsEnum(UserRole, {
     message:
-      'الدور الوظيفي غير صالح، يجب أن يكون DOCTOR أو RECEPTIONIST أو ASSISTANT',
+      'الدور الوظيفي غير صالح، يجب أن يكون طبيب أو موظف استقبال أو مساعد',
   })
-  role: string;
+  role: UserRole;
 
   @IsOptional()
   @IsString({ message: 'التخصص يجب أن يكون نصاً' })

@@ -20,6 +20,7 @@ import { RolesGuard } from '../../guards/roles.guard';
 import { Roles } from '../../decorators/roles.decorator';
 import { multerConfig } from '../../middleware/upload.config';
 import type { UserDocument } from '../../models/user.model';
+import { UserRole } from '../../enums';
 
 @Controller('auth')
 export class AuthController {
@@ -77,7 +78,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('DOCTOR', 'RECEPTIONIST')
+  @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST)
   @Get('doctors-list')
   async getDoctorsList() {
     return this.authService.getAllDoctors();

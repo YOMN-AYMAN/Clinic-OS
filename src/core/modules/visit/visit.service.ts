@@ -79,7 +79,6 @@ export class VisitService {
   }
 
   async remove(id: string): Promise<{ message: string }> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const deleted = await this.visitModel.findByIdAndDelete(id).exec();
     if (!deleted) {
       throw new NotFoundException('الكشف المراد حذفه غير موجود');
