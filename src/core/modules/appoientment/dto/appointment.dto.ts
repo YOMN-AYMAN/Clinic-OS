@@ -30,17 +30,17 @@ export class CreateAppointmentDto {
   @IsEnum(ServiceType, {
     message: 'نوع الخدمة غير صالح',
   })
-  @Transform(({ value }: { value: string }) => value?.trim())
-  serviceType: string;
+  @Transform(({ value }: { value: string }) => value?.trim() as ServiceType)
+  serviceType: ServiceType;
 
   @IsOptional()
   @IsEnum(AppointmentStatus, {
     message: 'حالة الموعد غير صالحة',
   })
   @Transform(({ value }: { value: string }) =>
-    value ? value.trim() : AppointmentStatus.PENDING,
+    value ? (value.trim() as AppointmentStatus) : AppointmentStatus.PENDING,
   )
-  status?: string;
+  status?: AppointmentStatus;
 
   @IsOptional()
   @IsString()

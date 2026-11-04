@@ -14,6 +14,33 @@ import {
 } from './dto/invoice.dto';
 import { InvoiceStatus, PaymentMethod } from '../../enums';
 
+export interface InvoiceItem {
+  name: string;
+  price: number;
+  qty: number;
+}
+
+export interface InvoicePayment {
+  amount: number;
+  method: PaymentMethod;
+  paidAt: Date;
+  receivedBy: string;
+}
+
+export interface InvoiceWithRemaining {
+  _id: unknown;
+  patientId: unknown;
+  appointmentId: unknown;
+  items: InvoiceItem[];
+  total: number;
+  paidAmount: number;
+  status: InvoiceStatus;
+  payments: InvoicePayment[];
+  remaining: number;
+  createdAt?: unknown;
+  updatedAt?: unknown;
+}
+
 @Injectable()
 export class InvoiceService {
   constructor(
@@ -43,19 +70,14 @@ export class InvoiceService {
     }
 
     // تحديد الحالة تلقائياً
-    let status: string = InvoiceStatus.UNPAID;
+    let status: InvoiceStatus = InvoiceStatus.UNPAID;
     if (paidAmount === total && total > 0) {
       status = InvoiceStatus.PAID;
     } else if (paidAmount > 0 && paidAmount < total) {
       status = InvoiceStatus.PARTIAL;
     }
 
-    const payments: Array<{
-      amount: number;
-      method: string;
-      paidAt: Date;
-      receivedBy: string;
-    }> = [];
+    const payments: InvoicePayment[] = [];
 
     if (paidAmount > 0) {
       payments.push({
@@ -93,7 +115,7 @@ export class InvoiceService {
     }
 
     const newPaidAmount = invoice.paidAmount + paymentDto.amount;
-    let status: string = InvoiceStatus.PARTIAL;
+    let status: InvoiceStatus = InvoiceStatus.PARTIAL;
     if (newPaidAmount === invoice.total) {
       status = InvoiceStatus.PAID;
     }
@@ -116,7 +138,6 @@ export class InvoiceService {
       throw new NotFoundException('الفاتورة غير موجودة');
     }
 
-    // لو تم إرسال بنود جديدة، نحسب الإجمالي من جديد
     let total = invoice.total;
     if (updateDto.items) {
       total = updateDto.items.reduce(
@@ -151,7 +172,6 @@ export class InvoiceService {
       updatedPayments &&
       updatedPayments.length > 0
     ) {
-      // بنعدل آخر دفعة مسجلة كمثال لتحديث بيانات الاستقبال
       const lastPayment = updatedPayments[updatedPayments.length - 1];
       if (updateDto.receivedBy) {
         lastPayment.receivedBy = updateDto.receivedBy;
@@ -188,7 +208,7 @@ export class InvoiceService {
     return updated;
   }
 
-  async findAll(): Promise<any[]> {
+  async findAll(): Promise<InvoiceWithRemaining[]> {
     const invoices = await this.invoiceModel
       .find()
       .populate('patientId', 'name phone')
@@ -197,7 +217,7 @@ export class InvoiceService {
       .exec();
 
     return invoices.map((inv) => {
-      const invObj = inv.toObject();
+      const invObj = inv.toObject() as unknown as InvoiceWithRemaining;
       return {
         ...invObj,
         remaining: invObj.total - invObj.paidAmount,
@@ -205,7 +225,7 @@ export class InvoiceService {
     });
   }
 
-  async findById(id: string): Promise<any> {
+  async findById(id: string): Promise<InvoiceWithRemaining> {
     const invoice = await this.invoiceModel
       .findById(id)
       .populate('patientId', 'name phone')
@@ -216,7 +236,7 @@ export class InvoiceService {
       throw new NotFoundException('الفاتورة غير موجودة');
     }
 
-    const invObj = invoice.toObject();
+    const invObj = invoice.toObject() as unknown as InvoiceWithRemaining;
     return {
       ...invObj,
       remaining: invObj.total - invObj.paidAmount,

@@ -6,26 +6,27 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
+import { UserRole } from '../enums';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<string[]>(
+    const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(
       ROLES_KEY,
       [context.getHandler(), context.getClass()],
     );
     if (!requiredRoles) {
-      return true; // لو مفيش أدوار محددة، اسمح بالمرور طالما معاه Token
+      return true;
     }
     const { user } = context.switchToHttp().getRequest<{
-      user?: { role: string };
+      user?: { role: UserRole };
     }>();
     const hasRole = user?.role ? requiredRoles.includes(user.role) : false;
     if (!hasRole) {
       throw new ForbiddenException(
-        'ليس لديك الصلاحية الكافية للقيام بهذا الإجراء',
+        `ليس لديك الصلاحية الكافية للقيام بهذا الإجراء ${user?.role ?? ''}`,
       );
     }
     return true;

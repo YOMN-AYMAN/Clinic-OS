@@ -9,30 +9,32 @@ import {
   Appointment,
   AppointmentDocument,
 } from '../../models/appointment.model';
+import { Patient, PatientDocument } from '../../models/patient.model';
+import { NotificationService } from '../notification/notification.service';
 import {
   CreateAppointmentDto,
   UpdateAppointmentDto,
 } from './dto/appointment.dto';
-import { AppointmentStatus } from '../../enums';
+import { AppointmentStatus, ServiceType } from '../../enums';
 
 @Injectable()
 export class AppointmentService {
   constructor(
     @InjectModel(Appointment.name)
     private appointmentModel: Model<AppointmentDocument>,
+    @InjectModel(Patient.name)
+    private patientModel: Model<PatientDocument>,
+    private notificationService: NotificationService,
   ) {}
 
-  // 1. إنشاء موعد جديد مع منع التداخل (فارق 15 دقيقة)
   async create(createDto: CreateAppointmentDto): Promise<Appointment> {
-    const { doctorId, date, time } = createDto;
+    const { doctorId, date, time, patientId, serviceType } = createDto;
 
-    // حساب نطاق الـ 15 دقيقة (يمكن تبسيطها بالتأكد من عدم تطابق نفس اليوم والوقت تماماً، أو حساب دقائق الـ Time)
-    // هنا سنقوم بالتحقق من نفس اليوم ونفس الوقت بدقة منعاً للتداخل المباشر
     const existingAppointment = await this.appointmentModel.findOne({
       doctorId: new Types.ObjectId(doctorId),
       date,
       time,
-      status: { $ne: AppointmentStatus.CANCELLED }, // لو الموعد مش ملغي يبقى محجوز
+      status: { $ne: AppointmentStatus.CANCELLED },
     });
 
     if (existingAppointment) {
@@ -43,14 +45,27 @@ export class AppointmentService {
 
     const newAppointment = new this.appointmentModel({
       ...createDto,
-      patientId: new Types.ObjectId(createDto.patientId),
-      doctorId: new Types.ObjectId(createDto.doctorId),
+      patientId: new Types.ObjectId(patientId),
+      doctorId: new Types.ObjectId(doctorId),
     });
+    const savedAppointment = await newAppointment.save();
 
-    return newAppointment.save();
+    const patient = await this.patientModel.findById(patientId).exec();
+    if (patient) {
+      await this.notificationService.sendAppointmentNotification(
+        patient._id.toString(),
+        savedAppointment._id.toString(),
+        serviceType || ServiceType.NEW_EXAM,
+        patient.name,
+        patient.phone,
+        date,
+        time,
+      );
+    }
+
+    return savedAppointment;
   }
 
-  // 2. جلب كل المواعيد (مع إمكانية جلب بيانات المريض والدكتور المرتبطة)
   async findAll(): Promise<Appointment[]> {
     return this.appointmentModel
       .find()
@@ -60,7 +75,6 @@ export class AppointmentService {
       .exec();
   }
 
-  // 3. جلب موعد معين بالـ ID
   async findById(id: string): Promise<Appointment> {
     const appointment = await this.appointmentModel
       .findById(id)
@@ -74,7 +88,6 @@ export class AppointmentService {
     return appointment;
   }
 
-  // 4. تحديث بيانات أو حالة الموعد
   async update(
     id: string,
     updateDto: UpdateAppointmentDto,
@@ -89,7 +102,6 @@ export class AppointmentService {
     return updated;
   }
 
-  // 5. حذف موعد
   async remove(id: string): Promise<{ message: string }> {
     const deleted = await this.appointmentModel.findByIdAndDelete(id).exec();
     if (!deleted) {

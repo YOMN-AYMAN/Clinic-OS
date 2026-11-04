@@ -16,22 +16,22 @@ export class Patient {
   age: number;
 
   @Prop({ required: true, enum: Object.values(Gender) })
-  gender: string;
+  gender: Gender;
 
   @Prop({ trim: true })
   address?: string;
 
   @Prop({ trim: true })
-  medicalHistory?: string; // التاريخ المرضي أو الأمراض المزمنة
+  medicalHistory?: string;
 
   @Prop({ trim: true })
-  allergies?: string; // الحساسية تجاه أدوية معينة
+  allergies?: string;
 
   @Prop({ trim: true })
-  photo?: string; // مسار أو اسم صورة المريض
+  photo?: string;
 
   @Prop({ trim: true })
-  documents?: string; // مسار أو اسم المستند/التقرير الطبي
+  documents?: string;
 }
 
 export const PatientSchema = SchemaFactory.createForClass(Patient);

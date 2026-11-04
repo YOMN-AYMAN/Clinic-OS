@@ -24,13 +24,13 @@ export class Visit {
   visitDate: Date;
 
   @Prop({ trim: true })
-  chiefComplaint: string; // الشكوى الرئيسية
+  chiefComplaint: string;
 
   @Prop({ trim: true })
-  presentIllness: string; // المرض الحالي
+  presentIllness: string;
 
   @Prop({ required: true, trim: true })
-  diagnosis: string; // التشخيص
+  diagnosis: string;
 
   @Prop({
     type: {
@@ -55,7 +55,7 @@ export class Visit {
     enum: Object.values(VisitStatus),
     default: VisitStatus.IN_PROGRESS,
   })
-  status: string;
+  status: VisitStatus;
 }
 
 export const VisitSchema = SchemaFactory.createForClass(Visit);

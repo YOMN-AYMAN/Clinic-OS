@@ -10,6 +10,9 @@ import { PrescriptionModule } from './core/modules/prescription/prescription.mod
 import { InvoiceModule } from './core/modules/invoice/invoice.module';
 import { ExpenseModule } from './core/modules/expense/expense.module';
 import { ReportsModule } from './core/modules/report/report.module';
+import { ServiceModule } from './core/modules/service/service.module';
+import { NotificationModule } from './core/modules/notification/notification.module';
+import { SettingsModule } from './core/modules/settings/settings.module';
 
 @Module({
   imports: [
@@ -22,6 +25,9 @@ import { ReportsModule } from './core/modules/report/report.module';
     InvoiceModule,
     ExpenseModule,
     ReportsModule,
+    ServiceModule,
+    NotificationModule,
+    SettingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -28,7 +28,7 @@ export class CreatePatientDto {
 
   @IsNotEmpty({ message: 'النوع مطلوب' })
   @IsEnum(Gender, { message: 'النوع يجب أن يكون ذكر أو أنثى' })
-  gender: string;
+  gender: Gender;
 
   @IsOptional()
   @IsString()
@@ -69,7 +69,7 @@ export class UpdatePatientDto {
 
   @IsOptional()
   @IsEnum(Gender, { message: 'النوع يجب أن يكون ذكر أو أنثى' })
-  gender?: string;
+  gender?: Gender;
 
   @IsOptional()
   @IsString()

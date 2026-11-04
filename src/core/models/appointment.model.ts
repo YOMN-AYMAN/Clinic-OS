@@ -23,14 +23,14 @@ export class Appointment {
     enum: Object.values(ServiceType),
     default: ServiceType.NEW_EXAM,
   })
-  serviceType: string;
+  serviceType: ServiceType;
 
   @Prop({
     required: true,
     enum: Object.values(AppointmentStatus),
     default: AppointmentStatus.PENDING,
   })
-  status: string;
+  status: AppointmentStatus;
 
   @Prop({ trim: true })
   notes?: string;

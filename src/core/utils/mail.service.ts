@@ -8,8 +8,8 @@ export class MailService {
     port: 587,
     secure: false,
     auth: {
-      user: 'yomna.aym@gmail.com', // حطينا الإيميل هنا مباشرة
-      pass: 'xpqtlwazkzrrvzaf', // حطينا الباسورد هنا مباشرة
+      user: 'yomna.aym@gmail.com',
+      pass: 'xpqtlwazkzrrvzaf',
     },
     logger: true,
     debug: true,

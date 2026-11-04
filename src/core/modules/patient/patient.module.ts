@@ -10,6 +10,6 @@ import { PatientController } from './patient.controller';
   ],
   controllers: [PatientController],
   providers: [PatientService],
-  exports: [PatientService],
+  exports: [PatientService, MongooseModule],
 })
 export class PatientModule {}

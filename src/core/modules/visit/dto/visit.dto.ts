@@ -8,6 +8,7 @@ import {
   IsObject,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { PartialType } from '@nestjs/mapped-types';
 import { VisitStatus } from '../../../enums';
 
 export class CreateVisitDto {
@@ -52,11 +53,9 @@ export class CreateVisitDto {
   @IsOptional()
   @IsEnum(VisitStatus, { message: 'حالة الكشف غير صالحة' })
   @Transform(({ value }: { value: string }) =>
-    value ? value.trim() : VisitStatus.IN_PROGRESS,
+    value ? (value.trim() as VisitStatus) : VisitStatus.IN_PROGRESS,
   )
-  status?: string;
+  status?: VisitStatus;
 }
-
-import { PartialType } from '@nestjs/mapped-types';
 
 export class UpdateVisitDto extends PartialType(CreateVisitDto) {}

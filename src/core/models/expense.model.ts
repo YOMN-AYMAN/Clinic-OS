@@ -8,26 +8,24 @@ export type ExpenseDocument = Expense & Document;
 export class Expense {
   @Prop({
     required: true,
-    enum: Object.values(ExpenseType), // نوع المصروف: راتب أو مشتريات
+    enum: Object.values(ExpenseType),
   })
   type: ExpenseType;
 
-  // خاصة بالرواتب (SALARY)
   @Prop({ trim: true })
   employeeName?: string;
 
   @Prop({ trim: true })
   jobTitle?: string;
 
-  // خاصة بالمشتريات ومصروفات العيادة (PURCHASE)
   @Prop({ trim: true })
-  description?: string; // وصف الطلب أو المشتريات
+  description?: string;
 
   @Prop({ required: true, min: 0 })
-  amount: number; // القيمة أو الراتب
+  amount: number;
 
   @Prop({ trim: true })
-  receivedBy?: string; // اسم المستلم أو المسؤول
+  receivedBy?: string;
 }
 
 export const ExpenseSchema = SchemaFactory.createForClass(Expense);

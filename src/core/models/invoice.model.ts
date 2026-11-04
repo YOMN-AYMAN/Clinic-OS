@@ -44,7 +44,7 @@ export class Invoice {
     enum: Object.values(InvoiceStatus),
     default: InvoiceStatus.UNPAID,
   })
-  status: string;
+  status: InvoiceStatus;
 
   @Prop({
     type: [
@@ -63,7 +63,7 @@ export class Invoice {
   })
   payments: {
     amount: number;
-    method: string;
+    method: PaymentMethod;
     paidAt: Date;
     receivedBy: string;
   }[];

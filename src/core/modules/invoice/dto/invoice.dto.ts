@@ -11,6 +11,7 @@ import {
   Min,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
+import { PartialType } from '@nestjs/mapped-types';
 import { PaymentMethod } from '../../../enums';
 
 class InvoiceItemDto {
@@ -52,16 +53,14 @@ export class CreateInvoiceDto {
   @IsOptional()
   @IsEnum(PaymentMethod, { message: 'طريقة الدفع غير صالحة' })
   @Transform(({ value }: { value: string }) =>
-    value ? value.trim() : PaymentMethod.CASH,
+    value ? (value.trim() as PaymentMethod) : PaymentMethod.CASH,
   )
-  paymentMethod?: string;
+  paymentMethod?: PaymentMethod;
 
   @IsOptional()
   @IsString({ message: 'اسم المستلم يجب أن يكون نصاً' })
   receivedBy?: string;
 }
-
-import { PartialType } from '@nestjs/mapped-types';
 
 export class UpdateInvoiceDto extends PartialType(CreateInvoiceDto) {}
 
@@ -74,9 +73,9 @@ export class AddPaymentDto {
   @IsNotEmpty({ message: 'طريقة الدفع مطلوبة' })
   @IsEnum(PaymentMethod, { message: 'طريقة الدفع غير صالحة' })
   @Transform(({ value }: { value: string }) =>
-    value ? value.trim() : PaymentMethod.CASH,
+    value ? (value.trim() as PaymentMethod) : PaymentMethod.CASH,
   )
-  method: string;
+  method: PaymentMethod;
 
   @IsNotEmpty({ message: 'اسم المستلم مطلوب' })
   @IsString({ message: 'اسم المستلم يجب أن يكون نصاً' })

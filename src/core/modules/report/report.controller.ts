@@ -1,5 +1,5 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ReportsService } from './report.service';
+import { FinancialReportResponse, ReportsService } from './report.service';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { RolesGuard } from '../../guards/roles.guard';
 import { Roles } from '../../decorators/roles.decorator';
@@ -12,7 +12,7 @@ export class ReportsController {
 
   @Get()
   @Roles(UserRole.DOCTOR)
-  async getFinancialReport() {
+  async getFinancialReport(): Promise<FinancialReportResponse> {
     return this.reportsService.getFinancialReport();
   }
 }

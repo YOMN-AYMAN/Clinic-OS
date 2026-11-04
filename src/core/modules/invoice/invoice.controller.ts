@@ -8,7 +8,7 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { InvoiceService } from './invoice.service';
+import { InvoiceService, InvoiceWithRemaining } from './invoice.service';
 import {
   CreateInvoiceDto,
   UpdateInvoiceDto,
@@ -56,13 +56,13 @@ export class InvoiceController {
 
   @Get()
   @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST, UserRole.ASSISTANT)
-  async findAll() {
+  async findAll(): Promise<InvoiceWithRemaining[]> {
     return this.invoiceService.findAll();
   }
 
   @Get(':id')
   @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST, UserRole.ASSISTANT)
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<InvoiceWithRemaining> {
     return this.invoiceService.findById(id);
   }
 

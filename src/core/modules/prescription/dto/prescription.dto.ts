@@ -8,6 +8,7 @@ import {
   ArrayMinSize,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { PartialType } from '@nestjs/mapped-types';
 
 class PrescriptionItemDto {
   @IsNotEmpty({ message: 'اسم الدواء مطلوب' })
@@ -46,7 +47,5 @@ export class CreatePrescriptionDto {
   @IsString({ message: 'الملاحظات العامة يجب أن تكون نصاً' })
   notes?: string;
 }
-
-import { PartialType } from '@nestjs/mapped-types';
 
 export class UpdatePrescriptionDto extends PartialType(CreatePrescriptionDto) {}

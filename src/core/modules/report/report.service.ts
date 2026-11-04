@@ -5,6 +5,26 @@ import { Invoice, InvoiceDocument } from '../../models/invoice.model';
 import { Expense, ExpenseDocument } from '../../models/expense.model';
 import { ExpenseType } from '../../enums';
 
+export interface FinancialReportData {
+  revenue: {
+    totalInvoicesValue: number;
+    totalCollectedRevenue: number;
+    outstandingDues: number;
+  };
+  expenses: {
+    totalExpenses: number;
+    totalSalaries: number;
+    totalPurchases: number;
+  };
+  netProfit: number;
+}
+
+export interface FinancialReportResponse {
+  success: boolean;
+  message: string;
+  data: FinancialReportData;
+}
+
 @Injectable()
 export class ReportsService {
   constructor(
@@ -12,7 +32,7 @@ export class ReportsService {
     @InjectModel(Expense.name) private expenseModel: Model<ExpenseDocument>,
   ) {}
 
-  async getFinancialReport(): Promise<any> {
+  async getFinancialReport(): Promise<FinancialReportResponse> {
     const invoices = await this.invoiceModel.find().exec();
 
     let totalRevenue = 0;
