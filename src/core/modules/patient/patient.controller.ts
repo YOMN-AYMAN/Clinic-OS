@@ -24,11 +24,15 @@ import { Roles } from '../../decorators/roles.decorator';
 import { multerConfig } from '../../middleware/upload.config';
 import type { Express } from 'express';
 import { UserRole } from '../../enums';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('patients')
 export class PatientController {
-  constructor(private readonly patientService: PatientService) {}
+  constructor(
+    private readonly patientService: PatientService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   @Post()
   @Roles(UserRole.DOCTOR, UserRole.RECEPTIONIST, UserRole.ASSISTANT)
@@ -50,11 +54,13 @@ export class PatientController {
     },
   ) {
     if (files?.photo?.[0]) {
-      createPatientDto.photo = files.photo[0].path.replace(/\\/g, '/');
+      const uploadRes = await this.cloudinaryService.uploadImage(files.photo[0]);
+      createPatientDto.photo = uploadRes.secure_url;
     }
 
     if (files?.documents?.[0]) {
-      createPatientDto.documents = files.documents[0].path.replace(/\\/g, '/');
+      const uploadRes = await this.cloudinaryService.uploadImage(files.documents[0]);
+      createPatientDto.documents = uploadRes.secure_url;
     }
 
     const patient = await this.patientService.createPatient(createPatientDto);
@@ -100,12 +106,14 @@ export class PatientController {
   ) {
     const photoFile = files?.photo?.[0] || files?.avatar?.[0];
     if (photoFile) {
-      updatePatientDto.photo = photoFile.path.replace(/\\/g, '/');
+      const uploadRes = await this.cloudinaryService.uploadImage(photoFile);
+      updatePatientDto.photo = uploadRes.secure_url;
     }
 
     const docFile = files?.documents?.[0];
     if (docFile) {
-      updatePatientDto.documents = docFile.path.replace(/\\/g, '/');
+      const uploadRes = await this.cloudinaryService.uploadImage(docFile);
+      updatePatientDto.documents = uploadRes.secure_url;
     }
 
     const patient = await this.patientService.updatePatient(
@@ -128,8 +136,8 @@ export class PatientController {
     if (!file) {
       throw new BadRequestException('يرجى اختيار صورة لرفعها');
     }
-    const photoPath = file.path.replace(/\\/g, '/');
-    const patient = await this.patientService.updatePatientPhoto(id, photoPath);
+    const uploadRes = await this.cloudinaryService.uploadImage(file);
+    const patient = await this.patientService.updatePatientPhoto(id, uploadRes.secure_url);
     return {
       message: 'تم رفع صورة المريض بنجاح',
       patient,
@@ -146,10 +154,10 @@ export class PatientController {
     if (!file) {
       throw new BadRequestException('يرجى اختيار مستند لرفعه');
     }
-    const docPath = file.path.replace(/\\/g, '/');
+    const uploadRes = await this.cloudinaryService.uploadImage(file);
     const patient = await this.patientService.updatePatientDocument(
       id,
-      docPath,
+      uploadRes.secure_url,
     );
     return {
       message: 'تم رفع مستند المريض بنجاح',

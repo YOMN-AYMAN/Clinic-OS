@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { MailService } from '../../utils/mail.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       secret: process.env.JWT_SECRET || 'your_jwt_secret_key',
       signOptions: { expiresIn: '1d' },
     }),
+    CloudinaryModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, MailService, JwtStrategy],

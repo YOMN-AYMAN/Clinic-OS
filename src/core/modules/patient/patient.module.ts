@@ -3,10 +3,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Patient, PatientSchema } from '../../models/patient.model';
 import { PatientService } from './patient.service';
 import { PatientController } from './patient.controller';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Patient.name, schema: PatientSchema }]),
+    CloudinaryModule,
   ],
   controllers: [PatientController],
   providers: [PatientService],

@@ -65,15 +65,15 @@ export class PatientService {
     return updatedPatient;
   }
 
-  async updatePatientPhoto(id: string, photoPath: string): Promise<Patient> {
-    return this.updatePatient(id, { photo: photoPath });
+  async updatePatientPhoto(id: string, photoUrl: string): Promise<Patient> {
+    return this.updatePatient(id, { photo: photoUrl });
   }
 
   async updatePatientDocument(
     id: string,
-    documentPath: string,
+    documentUrl: string,
   ): Promise<Patient> {
-    return this.updatePatient(id, { documents: documentPath });
+    return this.updatePatient(id, { documents: documentUrl });
   }
 
   async removePatient(id: string): Promise<{ message: string }> {

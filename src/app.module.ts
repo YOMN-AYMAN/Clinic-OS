@@ -13,12 +13,14 @@ import { ReportsModule } from './core/modules/report/report.module';
 import { ServiceModule } from './core/modules/service/service.module';
 import { NotificationModule } from './core/modules/notification/notification.module';
 import { SettingsModule } from './core/modules/settings/settings.module';
+import { CloudinaryModule } from './core/modules/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
     MongooseModule.forRoot(
       'mongodb+srv://yomna5352_db_user:012341234@cluster0.p48e9tu.mongodb.net/',
     ),
+    CloudinaryModule,
     AuthModule,
     PatientModule,
     AppointmentModule,

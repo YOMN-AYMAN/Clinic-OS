@@ -21,10 +21,14 @@ import { Roles } from '../../decorators/roles.decorator';
 import { multerConfig } from '../../middleware/upload.config';
 import type { UserDocument } from '../../models/user.model';
 import { UserRole } from '../../enums';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   @Post('signup')
   @UseInterceptors(
@@ -46,7 +50,8 @@ export class AuthController {
   ) {
     const uploadedFile = files?.photo?.[0] || files?.avatar?.[0];
     if (uploadedFile) {
-      dto.photo = uploadedFile.path.replace(/\\/g, '/');
+      const result = await this.cloudinaryService.uploadImage(uploadedFile);
+      dto.photo = result.secure_url;
     }
     return this.authService.signup(dto);
   }
