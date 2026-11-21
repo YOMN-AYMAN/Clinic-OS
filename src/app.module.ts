@@ -16,7 +16,9 @@ import { SettingsModule } from './core/modules/settings/settings.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/clinicos'),
+    MongooseModule.forRoot(
+      'mongodb+srv://yomna5352_db_user:012341234@cluster0.p48e9tu.mongodb.net/',
+    ),
     AuthModule,
     PatientModule,
     AppointmentModule,
