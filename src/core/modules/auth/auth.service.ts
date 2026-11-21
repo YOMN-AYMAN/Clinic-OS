@@ -179,9 +179,9 @@ export class AuthService {
     return { message: 'تم تغيير كلمة المرور بنجاح، يمكنك تسجيل الدخول الآن' };
   }
 
-  async updatePhoto(userId: string, photoPath: string) {
+  async updatePhoto(userId: string, photoUrl: string) {
     const user = await this.userModel
-      .findByIdAndUpdate(userId, { photo: photoPath }, { new: true })
+      .findByIdAndUpdate(userId, { photo: photoUrl }, { new: true })
       .select('-passwordHash');
 
     if (!user) {
