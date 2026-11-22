@@ -1,3 +1,4 @@
+import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
@@ -17,6 +18,9 @@ import { CloudinaryModule } from './core/modules/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     MongooseModule.forRoot(
       'mongodb+srv://yomna5352_db_user:012341234@cluster0.p48e9tu.mongodb.net/',
     ),
