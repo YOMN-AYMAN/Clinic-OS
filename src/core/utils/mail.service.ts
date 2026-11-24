@@ -39,19 +39,24 @@
 // }
 
 import { Injectable } from '@nestjs/common';
-import { Resend } from 'resend';
+import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class MailService {
-  private resend = new Resend(process.env.RESEND_API_KEY);
+  private transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
+    port: Number(process.env.SMTP_PORT) || 2525,
+    secure: false,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
 
   async sendOtpEmail(email: string, otp: string) {
     try {
-      const fromAddress =
-        process.env.MAIL_FROM || 'ClinicOS Support <onboarding@resend.dev>';
-
-      const { error } = await this.resend.emails.send({
-        from: fromAddress,
+      await this.transporter.sendMail({
+        from: `"ClinicOS Support" <${process.env.SMTP_USER}>`,
         to: email,
         subject: 'كود التحقق الخاص بك في نظام ClinicOS',
         html: `
@@ -63,11 +68,6 @@ export class MailService {
           </div>
         `,
       });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
       console.log('Email sent successfully!');
     } catch (error) {
       console.error('Error sending email:', error);
