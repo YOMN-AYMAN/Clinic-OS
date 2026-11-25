@@ -21,10 +21,10 @@ import { CloudinaryModule } from './core/modules/cloudinary/cloudinary.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    // MongooseModule.forRoot(
-    //   'mongodb+srv://yomna5352_db_user:012341234@cluster0.p48e9tu.mongodb.net/',
-    // ),
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/clinicos'),
+    MongooseModule.forRoot(
+      'mongodb+srv://yomna5352_db_user:012341234@cluster0.p48e9tu.mongodb.net/',
+    ),
+    // MongooseModule.forRoot('mongodb://127.0.0.1:27017/clinicos'),
     CloudinaryModule,
     AuthModule,
     PatientModule,
